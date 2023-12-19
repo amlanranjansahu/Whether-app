@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color :rgb(43, 181, 208)
+
+        }
+
+        #weather-container {
+            text-align: center;
+            background-color :rgb(99, 39, 39);
+            
+        }
+
+        #location-input {
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+    
+    </style>
+    <title>Weather App</title>
+</head>
+<body>
+    <div id="weather-container">
+        <input type="text" id="location-input" placeholder="Enter location">
+        <button onclick="getWeather()">Get Weather</button>
+        <div id="weather-info"></div>
+        
+    </div>
+
+    <script>
+        async function getWeather() {
+            const apiKey = '631e09a4db199075f393495f16af4327';
+            const locationInput = document.getElementById('location-input');
+            const location = locationInput.value;
+
+            if (location === "") {
+                alert("Please enter a location");
+                return;
+            }
+
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayWeather(data);
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            } catch (error) {
+                console.error('Error fetching weather data:', error);
+            }
+        }
+
+        function displayWeather(data) {
+            const weatherInfo = document.getElementById('weather-info');
+            const temperature = data.main.temp;
+            const description = data.weather[0].description;
+
+            weatherInfo.innerHTML = `
+                <h2>Current Weather in ${data.name}</h2>
+                <p>Temperature: ${temperature} &#8451;</p>
+                <p>Description: ${description}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
